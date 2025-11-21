@@ -1,255 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body{
-            color: #eee;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background-image:
-            repeating-linear-gradient(
-                to right, #2d2a44 0 1px, transparent 2px 200px
-            ),
-            repeating-linear-gradient(
-                to bottom, #2d2a44 0 1px, transparent 2px 200px
-            ),
-            radial-gradient(
-                at 50% 50%, #2d2a44, #1d1b34
-            );
-        }
-        ::-webkit-scrollbar{
-            width: 0;
-        }
-        *{
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            list-style: none;
-        }
-        header img{
-            width: 30px;
-        }
-        header{
-            width: min(1200px, 90vw);
-            margin: auto;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header nav ul{
-            display: flex;
-            gap: 30px;
-        }
-        main .banner{
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            text-align: center;
-            margin-top: -70px;
-        }
-        h1, h2, h3, h4, h5, h6{
-            font-weight: 500;
-        }
-        .banner button{
-            all: unset;
-            border: 1px solid #afaeae55;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background-image: linear-gradient(
-                to bottom, #eee1, transparent, #eee1
-            );
-            cursor: pointer;
-            transition: 0.5s;
-        }
-        .banner button:hover{
-            background-color: #c691e6;
-            color: #040018;
-            box-shadow: 0 0 50px #c691e6;
+<!-- ... (kode lain tetap) ... -->
+<div class="banner">
+    <!-- ... (kode lain tetap) ... -->
+    <button>Subscribe Now &#8599;</button>
+    <canvas id="dotsCanvas"></canvas>
 
-        }
-        h1{
-            --to: left;
-            font-size: 4em;
-            font-weight: bold;
-            background-image: linear-gradient(
-                to var(--to), #89a5df, #e46e7f, #e8e191
-            );
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            line-height: 1em;
-        }
-        h1.right{
-            --to: right;
-        }
-
-        .banner{
-            position: relative;
-        }
-        .banner #dotsCanvas{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <figure>
-            <img src="../logo.svg">
-        </figure>
-        <nav>
-            <ul>
-                <li>Overview</li>
-                <li>Team</li>
-                <li>Pricing</li>
-                <li>Enterprise</li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <div class="banner">
-            <h5>@Artt_zzz</h5>
-            <div>
-                <h1 class="left">Welcome to My Coding</h1>
-                <h1 class="right">Mr. Art</h1>
-            </div>
-            <h4>
-                Subscribe to the channel to continuously
-                <br>update interesting videos
-            </h4>
-            <button>Subscribe Now &#8599</button>
-
-            <canvas id="dotsCanvas"></canvas>
-        </div>
-    </main>    
-
-    <script>
-        let banner = document.querySelector('.banner');
-        let canvas = document.getElementById('dotsCanvas');
-        function resizeCanvas() {
-            canvas.width = banner.offsetWidth;
-            canvas.height = banner.offsetHeight;
-        }
-        resizeCanvas();
-
-        const ctx = canvas.getContext('2d');
-        const arrayColors = ['#eee', '#545454', '#596d91', '#bb5a68', '#696541'];
-        let dots = [];
-
-        function generateDots(count) {
-            dots = [];
-            for (let i = 0; i < count; i++) {
-                const speed = Math.random() * 0.5 + 0.2;
-                const angle = Math.random() * 2 * Math.PI;
-                dots.push({
-                    x:  Math.random() * canvas.width,
-                    y:  Math.random() * canvas.height,
-                    baseSize: Math.random() * 3 + 5,
-                    color: arrayColors[Math.floor(Math.random()* arrayColors.length)],
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    twinkleOffset: Math.random() * Math.PI * 2
-                });
-            }
-        }
-        function dotsCount() {
-            return Math.max(30, Math.floor((canvas.width * canvas.height) / 8000));
-        }
-        generateDots(dotsCount());
-
-        // Animation state
-        let mouse = null;
-
-        function animateDots(time) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const t = time * 0.002; // slower twinkle
-
-            dots.forEach((dot, index) => {
-                // Animate "shining"/twinkle with sine opacity and pulsing size
-                const sizePulse = Math.sin(t + dot.twinkleOffset) * 0.5 + 1.2;
-                const size = dot.baseSize * sizePulse;
-                const opacity = 0.6 + 0.4 * Math.abs(Math.cos(t + dot.twinkleOffset));
-                ctx.globalAlpha = opacity;
-
-                // Draw shining dot (glow effect)
-                let gradient = ctx.createRadialGradient(dot.x, dot.y, 1, dot.x, dot.y, size * 2.5);
-                gradient.addColorStop(0, dot.color);
-                gradient.addColorStop(0.5, dot.color + "22");
-                gradient.addColorStop(1, "transparent");
-                ctx.beginPath();
-                ctx.arc(dot.x, dot.y, size * 2.5, 0, Math.PI * 2);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-
-                // Draw main (opaque) dot
-                ctx.beginPath();
-                ctx.arc(dot.x, dot.y, size, 0, Math.PI*2);
-                ctx.fillStyle = dot.color;
-                ctx.shadowColor = dot.color;
-                ctx.shadowBlur = 16;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                ctx.globalAlpha = 1.0;
-
-                // Move dot, bounce edges
-                dot.x += dot.vx;
-                dot.y += dot.vy;
-                if(dot.x < 0 || dot.x > canvas.width) dot.vx *= -1;
-                if(dot.y < 0 || dot.y > canvas.height) dot.vy *= -1;
-                dot.x = Math.max(0, Math.min(dot.x, canvas.width));
-                dot.y = Math.max(0, Math.min(dot.y, canvas.height));
-            });
-
-            // Draw lines to mouse, if present
-            if (mouse) {
-                dots.forEach((dot) => {
-                    let distance = Math.sqrt((mouse.x - dot.x) ** 2 + (mouse.y - dot.y) ** 2);
-                    if(distance < 300){
-                        ctx.strokeStyle = dot.color;
-                        ctx.lineWidth = 1;
-                        ctx.globalAlpha = 0.3 + 0.7 * (1 - distance / 300);
-                        ctx.beginPath();
-                        ctx.moveTo(dot.x, dot.y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.stroke();
-                        ctx.globalAlpha = 1.0;
-                    }
-                });
-            }
-
-            requestAnimationFrame(animateDots);
-        }
-        requestAnimationFrame(animateDots);
-
-        // Mouse interaction
-        banner.addEventListener('mousemove', (event) => {
-            mouse = {
-                x:  event.pageX - banner.getBoundingClientRect().left,
-                y:  event.pageY - banner.getBoundingClientRect().top
-            };
-        });
-
-        banner.addEventListener('mouseout', () => {
-            mouse = null;
-        });
-
-        // Responsiveness
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            generateDots(dotsCount());
-        });
-    </script>
-</body>
-</html>
+    <!-- Tambahan: SVG orang main basket -->
+    <div class="basketball-player">
+        <svg width="160" height="220" viewBox="0 0 160 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ring basket -->
+            <rect x="120" y="30" width="10" height="60" fill="#e46e7f"></rect>
+            <ellipse cx="125" cy="50" rx="24" ry="7" fill="none" stroke="#e46e7f" stroke-width="4"/>
+            <ellipse cx="125" cy="52" rx="10" ry="4" fill="#bbb"/>
+            <rect x="113" y="30" width="25" height="3" fill="#e8e191"/>
+            <!-- Badan -->
+            <ellipse cx="60" cy="115" rx="23" ry="38" fill="#89a5df"/>
+            <!-- Kepala -->
+            <ellipse cx="60" cy="65" rx="18" ry="17" fill="#ffe0bd" stroke="#a98554" stroke-width="2"/>
+            <!-- Kaki kiri -->
+            <rect x="50" y="150" width="10" height="45" rx="5" fill="#ffe0bd"/>
+            <ellipse cx="55" cy="198" rx="9" ry="6" fill="#545454"/>
+            <!-- Kaki kanan (lompat) -->
+            <rect x="72" y="145" width="10" height="32" rx="5" fill="#ffe0bd" transform="rotate(20 72 145)"/>
+            <ellipse cx="89" cy="180" rx="10" ry="7" fill="#545454"/>
+            <!-- Lengan kiri (angkat bola) -->
+            <rect x="38" y="88" width="11" height="50" rx="5.5" fill="#ffe0bd" transform="rotate(-20 38 88)"/>
+            <!-- Lengan kanan -->
+            <rect x="72" y="85" width="10" height="53" rx="5" fill="#ffe0bd" transform="rotate(40 77 111)"/>
+            <!-- Bola basket di atas tangan kiri -->
+            <circle cx="35" cy="80" r="16" fill="#bb5a28" stroke="#c691e6" stroke-width="2"/>
+            <path d="M 22 82 Q 35 95 48 82" stroke="#fff1" stroke-width="2" fill="none"/>
+            <path d="M 35 65 Q 35 82 35 97" stroke="#fff1" stroke-width="2" fill="none"/>
+            <!-- Mata, senyum -->
+            <ellipse cx="66" cy="69" rx="2" ry="3" fill="#545454"/>
+            <ellipse cx="54" cy="69" rx="2" ry="3" fill="#545454"/>
+            <path d="M56 77 Q 60 80 65 77" stroke="#a98554" stroke-width="2" fill="none"/>
+        </svg>
+    </div>
+</div>
+<!-- ... (kode lain tetap) ... -->
