@@ -1,40 +1,32 @@
-<!-- ... (kode lain tetap) ... -->
-<div class="banner">
-    <!-- ... (kode lain tetap) ... -->
-    <button>Subscribe Now &#8599;</button>
-    <canvas id="dotsCanvas"></canvas>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Media dari URL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Input Foto & Video dari URL</h1>
+        <form id="mediaForm">
+            <label for="imageUrl">URL Foto (Gambar):</label>
+            <input type="text" id="imageUrl" placeholder="Masukkan URL gambar (mis. .jpg, .png)" required>
 
-    <!-- Tambahan: SVG orang main basket -->
-    <div class="basketball-player">
-        <svg width="160" height="220" viewBox="0 0 160 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Ring basket -->
-            <rect x="120" y="30" width="10" height="60" fill="#e46e7f"></rect>
-            <ellipse cx="125" cy="50" rx="24" ry="7" fill="none" stroke="#e46e7f" stroke-width="4"/>
-            <ellipse cx="125" cy="52" rx="10" ry="4" fill="#bbb"/>
-            <rect x="113" y="30" width="25" height="3" fill="#e8e191"/>
-            <!-- Badan -->
-            <ellipse cx="60" cy="115" rx="23" ry="38" fill="#89a5df"/>
-            <!-- Kepala -->
-            <ellipse cx="60" cy="65" rx="18" ry="17" fill="#ffe0bd" stroke="#a98554" stroke-width="2"/>
-            <!-- Kaki kiri -->
-            <rect x="50" y="150" width="10" height="45" rx="5" fill="#ffe0bd"/>
-            <ellipse cx="55" cy="198" rx="9" ry="6" fill="#545454"/>
-            <!-- Kaki kanan (lompat) -->
-            <rect x="72" y="145" width="10" height="32" rx="5" fill="#ffe0bd" transform="rotate(20 72 145)"/>
-            <ellipse cx="89" cy="180" rx="10" ry="7" fill="#545454"/>
-            <!-- Lengan kiri (angkat bola) -->
-            <rect x="38" y="88" width="11" height="50" rx="5.5" fill="#ffe0bd" transform="rotate(-20 38 88)"/>
-            <!-- Lengan kanan -->
-            <rect x="72" y="85" width="10" height="53" rx="5" fill="#ffe0bd" transform="rotate(40 77 111)"/>
-            <!-- Bola basket di atas tangan kiri -->
-            <circle cx="35" cy="80" r="16" fill="#bb5a28" stroke="#c691e6" stroke-width="2"/>
-            <path d="M 22 82 Q 35 95 48 82" stroke="#fff1" stroke-width="2" fill="none"/>
-            <path d="M 35 65 Q 35 82 35 97" stroke="#fff1" stroke-width="2" fill="none"/>
-            <!-- Mata, senyum -->
-            <ellipse cx="66" cy="69" rx="2" ry="3" fill="#545454"/>
-            <ellipse cx="54" cy="69" rx="2" ry="3" fill="#545454"/>
-            <path d="M56 77 Q 60 80 65 77" stroke="#a98554" stroke-width="2" fill="none"/>
-        </svg>
+            <label for="videoUrl">URL Video:</label>
+            <input type="text" id="videoUrl" placeholder="Masukkan URL video (mis. .mp4, YouTube embed)">
+
+            <button type="submit">Tampilkan Media</button>
+        </form>
+
+        <hr>
+
+        <h2>Hasil Tampilan Media</h2>
+        <div id="mediaOutput" class="media-output">
+            <p>Media yang Anda masukkan akan ditampilkan di sini.</p>
+        </div>
     </div>
-</div>
-<!-- ... (kode lain tetap) ... -->
+
+    <script src="script.js"></script>
+</body>
+</html>
