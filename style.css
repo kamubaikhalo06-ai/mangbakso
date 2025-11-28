@@ -1,1 +1,98 @@
-/tempat stylish/
+document.addEventListener('DOMContentLoaded', function() {
+    const mediaForm = document.getElementById('mediaForm');
+    const imageUrlInput = document.getElementById('imageUrl');
+    const videoUrlInput = document.getElementById('videoUrl');
+    const mediaOutput = document.getElementById('mediaOutput');
+
+    mediaForm.addEventListener('submit', function(event) {
+        // Mencegah form melakukan reload halaman
+        event.preventDefault();
+
+        // Mengambil nilai URL
+        const imageUrl = imageUrlInput.value.trim();
+        const videoUrl = videoUrlInput.value.trim();
+
+        // Mengosongkan area output sebelumnya
+        mediaOutput.innerHTML = '';
+
+        // --- Proses Gambar ---
+        if (imageUrl) {
+            // Membuat elemen gambar
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.alt = "Gambar dari URL";
+            
+            // Menambahkan elemen gambar ke output
+            mediaOutput.appendChild(imgElement);
+
+            // Menambahkan penanganan error jika gambar gagal dimuat
+            imgElement.onerror = function() {
+                const errorMsg = document.createElement('p');
+                errorMsg.style.color = 'red';
+                errorMsg.innerHTML = `⚠️ Gagal memuat gambar dari URL: **${imageUrl}**`;
+                mediaOutput.appendChild(errorMsg);
+                imgElement.remove(); // Hapus elemen gambar yang rusak
+            };
+
+            // Menampilkan judul untuk gambar
+            const imageTitle = document.createElement('h3');
+            imageTitle.textContent = 'Foto (Gambar):';
+            mediaOutput.prepend(imageTitle);
+        }
+
+        // --- Proses Video ---
+        if (videoUrl) {
+            // Cek jika URL adalah link YouTube biasa (memerlukan embed)
+            let finalVideoUrl = videoUrl;
+            let isYouTube = false;
+
+            // Pola untuk mendeteksi URL tontonan YouTube
+            const youtubeWatchRegex = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?feature=player_embedded&v=))([\w-]{11})/;
+            const match = videoUrl.match(youtubeWatchRegex);
+
+            if (match && match[1]) {
+                // Jika URL adalah link tontonan, ubah menjadi URL embed YouTube
+                finalVideoUrl = `https://www.youtube.com/embed/${match[1]}`;
+                isYouTube = true;
+            }
+
+            // Membuat judul untuk video
+            const videoTitle = document.createElement('h3');
+            videoTitle.textContent = 'Video:';
+            mediaOutput.appendChild(videoTitle);
+            
+            if (isYouTube) {
+                // Untuk YouTube, gunakan <iframe>
+                const iframeElement = document.createElement('iframe');
+                iframeElement.src = finalVideoUrl;
+                iframeElement.frameborder = "0";
+                iframeElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframeElement.allowFullscreen = true;
+                mediaOutput.appendChild(iframeElement);
+            } else {
+                // Untuk video format lain (misalnya .mp4), gunakan <video>
+                const videoElement = document.createElement('video');
+                videoElement.src = finalVideoUrl;
+                videoElement.controls = true; // Menampilkan kontrol pemutaran
+                
+                // Menambahkan elemen video ke output
+                mediaOutput.appendChild(videoElement);
+
+                // Menambahkan penanganan error untuk video
+                 videoElement.onerror = function() {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.style.color = 'red';
+                    errorMsg.innerHTML = `⚠️ Gagal memuat video dari URL: **${videoUrl}**. Pastikan URL video langsung (misalnya berakhiran .mp4) atau URL embed yang valid.`;
+                    mediaOutput.appendChild(errorMsg);
+                    videoElement.remove(); // Hapus elemen video yang rusak
+                };
+            }
+
+        }
+        
+        // Pesan default jika tidak ada input
+        if (!imageUrl && !videoUrl) {
+             mediaOutput.innerHTML = '<p>Silakan masukkan URL Foto atau Video.</p>';
+        }
+    });
+});
